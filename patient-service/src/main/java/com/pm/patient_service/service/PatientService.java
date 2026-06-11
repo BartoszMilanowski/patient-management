@@ -4,6 +4,7 @@ import com.pm.patient_service.dto.PatientRequestDTO;
 import com.pm.patient_service.dto.PatientResponseDTO;
 import com.pm.patient_service.exception.EmailAlreadyExistsException;
 import com.pm.patient_service.exception.PatientNotFoundException;
+import com.pm.patient_service.grpc.BillingServiceGrpcClient;
 import com.pm.patient_service.mapper.PatientMapper;
 import com.pm.patient_service.model.Patient;
 import com.pm.patient_service.repository.PatientRepository;
@@ -18,10 +19,13 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
+    private final BillingServiceGrpcClient billingServiceGrpcClient;
 
-    public PatientService(PatientRepository patientRepository, PatientMapper patientMapper) {
+    public PatientService(PatientRepository patientRepository, PatientMapper patientMapper,
+                          BillingServiceGrpcClient billingServiceGrpcClient) {
         this.patientRepository = patientRepository;
         this.patientMapper = patientMapper;
+        this.billingServiceGrpcClient = billingServiceGrpcClient;
     }
 
     public List<PatientResponseDTO> getPatients() {
@@ -37,7 +41,12 @@ public class PatientService {
             throw new EmailAlreadyExistsException("A patient with this email already exist" + patientRequestDTO.getEmail());
         }
 
-        return patientMapper.toDTO(patientRepository.save(patientMapper.toEntity(patientRequestDTO)));
+        Patient newPatient = patientRepository.save(patientMapper.toEntity(patientRequestDTO));
+
+        billingServiceGrpcClient
+                .createBillingAccount(newPatient.getId().toString(), newPatient.getName(), newPatient.getEmail());
+
+        return patientMapper.toDTO(newPatient);
     }
 
     public PatientResponseDTO updatePatient(UUID id, PatientRequestDTO patientRequestDTO) {
@@ -57,7 +66,7 @@ public class PatientService {
         return patientMapper.toDTO(patientRepository.save(patient));
     }
 
-    public void deletePatient(UUID id){
+    public void deletePatient(UUID id) {
         patientRepository.deleteById(id);
     }
 }

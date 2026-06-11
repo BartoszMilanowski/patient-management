@@ -27,7 +27,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>25</java.version>
+		<java.version>21k</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -74,9 +74,6 @@
             <artifactId>protobuf-java</artifactId>
             <version>4.29.1</version>
         </dependency>
-
-
-
     </dependencies>
 
 

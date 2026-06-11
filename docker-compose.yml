@@ -12,6 +12,17 @@ services:
     networks:
       - patient-network
 
+  billing-service:
+    container_name: billing-service
+    build:
+      context: ./billing-service
+    ports:
+      - "4001:4001"
+      - "9001:9001"
+    networks:
+      - patient-network
+
+
 networks:
   patient-network:
     external: true
