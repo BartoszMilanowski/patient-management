@@ -24,6 +24,17 @@ services:
     networks:
       - patient-network
 
+  analytics-service:
+    container_name: analytics-service
+    build:
+      context: ./analytics-service
+    ports:
+      - "4002:4002"
+    networks:
+      - patient-network
+
+
+
 
 networks:
   patient-network:
