@@ -33,6 +33,16 @@ services:
     networks:
       - patient-network
 
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: ./api-gateway
+    ports:
+      - "4004:4004"
+    networks:
+      - patient-network
+
+
 
 
 

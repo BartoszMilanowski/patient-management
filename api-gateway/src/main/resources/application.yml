@@ -1,0 +1,32 @@
+server:
+  port: 4004
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: patient-service-route
+          uri: http://patient-service:4000
+          predicates:
+            - name: Path
+              args:
+                patterns: /api/patients/**
+          filters:
+            - name: StripPrefix
+              args:
+                parts: 1
+        - id: api-docs-patient-route
+          uri: http://patient-service:4000
+          predicates:
+            - name: Path
+              args:
+                patterns: /api-docs/patients
+          filters:
+            - name: RewritePath
+              args:
+                regexp: /api-docs/patients
+                replacement: /v3/api-docs
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
