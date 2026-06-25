@@ -52,6 +52,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://auth_db:5432/auth_db
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
     networks:
       - patient-network
 
